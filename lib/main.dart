@@ -214,9 +214,21 @@ class _HomePageState extends State<HomePage> {
                     else {
                       return NumPad(
                         buttontapped: () {
+                          log('masuk');
                           setState(() {
-                            userInput += buttons[index];
-                            _input.text = userInput;
+                            if (isCalculate) {
+                              userInput = '';
+                              answer = '';
+                              _input.text = userInput;
+                              _result.text = answer;
+                              userInput += buttons[index];
+                              _input.text = userInput;
+                              isCalculate = false;
+                            } else {
+                              userInput += buttons[index];
+                              _input.text = userInput;
+                            }
+
                             log(_input.text);
                           });
                         },

@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
     '*',
     '.',
     '0',
-    'DEL',
+    '',
     ':',
   ];
   final TextEditingController _input = TextEditingController();
@@ -74,43 +74,41 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: 20.0,
           ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _input,
-                      readOnly: true,
-                      keyboardType: TextInputType.none,
-                      decoration: InputDecoration(
-                        labelText: 'Input',
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32)),
-                      ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  TextFormField(
+                    controller: _input,
+                    readOnly: true,
+                    keyboardType: TextInputType.none,
+                    decoration: InputDecoration(
+                      labelText: 'Input',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)),
                     ),
-                    const SizedBox(
-                      height: 10.0,
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  TextFormField(
+                    controller: _result,
+                    readOnly: true,
+                    keyboardType: TextInputType.none,
+                    decoration: InputDecoration(
+                      labelText: 'Hasil',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)),
                     ),
-                    TextFormField(
-                      controller: _result,
-                      readOnly: true,
-                      keyboardType: TextInputType.none,
-                      decoration: InputDecoration(
-                        labelText: 'Hasil',
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32)),
-                      ),
-                    ),
-                  ]),
-            ),
+                  ),
+                ]),
           ),
           const SizedBox(
             height: 20.0,
@@ -127,20 +125,21 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSpacing: 8),
                   itemBuilder: (BuildContext context, int index) {
                     // Clear Button
-                    if (buttons[index] == 'DEL') {
-                      return NumPad(
-                        buttontapped: () {
-                          setState(() {
-                            userInput =
-                                userInput.substring(0, userInput.length - 1);
-                            _input.text = userInput;
-                            log(_input.text);
-                          });
-                        },
-                        buttonText: buttons[index],
-                        color: const Color(0xffefefef),
-                        textColor: const Color(0xff489bdc),
-                      );
+                    if (buttons[index] == '') {
+                      // return NumPad(
+                      //   buttontapped: () {
+                      //     setState(() {
+                      //       userInput =
+                      //           userInput.substring(0, userInput.length - 1);
+                      //       _input.text = userInput;
+                      //       log(_input.text);
+                      //     });
+                      //   },
+                      //   buttonText: buttons[index],
+                      //   color: const Color(0xffefefef),
+                      //   textColor: const Color(0xff489bdc),
+                      // );
+                      return Container();
                     }
                     // else if (index == 0) {
                     //   return NumPad(
@@ -216,14 +215,19 @@ class _HomePageState extends State<HomePage> {
                         buttontapped: () {
                           log('masuk');
                           setState(() {
-                            if (isCalculate) {
+                            if (isOperator(buttons[index]) && isCalculate) {
+                              userInput += buttons[index];
+                              _input.text = userInput;
+                              isCalculate = false;
+
+                              log('is op');
+                            } else if (isCalculate) {
                               userInput = '';
                               answer = '';
                               _input.text = userInput;
                               _result.text = answer;
                               userInput += buttons[index];
                               _input.text = userInput;
-                              isCalculate = false;
                             } else {
                               userInput += buttons[index];
                               _input.text = userInput;
@@ -240,9 +244,8 @@ class _HomePageState extends State<HomePage> {
                   }), // GridView.builder
             ),
           ),
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Row(
               children: [
                 Expanded(
@@ -286,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                         ))),
               ],
             ),
-          ))
+          )
         ],
       ),
     );
